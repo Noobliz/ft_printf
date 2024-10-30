@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lguiet <lguiet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lisux <lisux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 11:43:42 by lguiet            #+#    #+#             */
-/*   Updated: 2024/10/29 16:54:43 by lguiet           ###   ########.fr       */
+/*   Updated: 2024/10/30 09:34:13 by lisux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_putadd(unsigned long int n, int *count)
 {
 	char	*base;
 
-	if (n == NULL)
+	if (n == 0)
 		ft_putstr("(nil)", count);
 	base = "0123456789abcdef";
 	if (n > 15)
@@ -71,12 +71,12 @@ int	ft_printf(const char *str, ...)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '%' && str[i] != '\0')
+		if (str[i] == '%' && str[i + 1] != '\0')
 		{
 			i++;
 			ft_flags(args, str[i], &count);
 		}
-		else
+		else if (str[i] != '%')
 		{
 			count += write(1, &str[i], 1);
 		}

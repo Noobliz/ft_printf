@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_basics.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lguiet <lguiet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lisux <lisux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 16:01:16 by lguiet            #+#    #+#             */
-/*   Updated: 2024/10/29 16:04:40 by lguiet           ###   ########.fr       */
+/*   Updated: 2024/10/30 09:34:06 by lisux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ void	ft_putstr(char *str, int *count)
 	int	i;
 
 	if (str == NULL)
+	{
+		ft_putstr("(null)", count);
 		return ;
+	}
 	i = 0;
 	while (str[i])
 	{
@@ -53,6 +56,6 @@ void	ft_putuns(unsigned int n, int *count)
 		return ;
 	}
 	if (n > 9)
-		ft_putnbr(n / 10, count);
+		ft_putuns(n / 10, count);
 	ft_putchar(n % 10 + '0', count);
 }
