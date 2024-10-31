@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lisux <lisux@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lguiet <lguiet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 11:43:42 by lguiet            #+#    #+#             */
-/*   Updated: 2024/10/30 09:34:13 by lisux            ###   ########.fr       */
+/*   Updated: 2024/10/30 14:45:42 by lguiet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 #include <stdarg.h>
-#include <stdio.h>
 #include <unistd.h>
 
 void	ft_puthexa(unsigned int n, int *count, char c)
@@ -27,46 +26,53 @@ void	ft_puthexa(unsigned int n, int *count, char c)
 		ft_puthexa(n / 16, count, c);
 	ft_putchar(base[n % 16], count);
 }
+
 void	ft_putadd(unsigned long int n, int *count)
 {
 	char	*base;
 
-	if (n == 0)
-		ft_putstr("(nil)", count);
 	base = "0123456789abcdef";
 	if (n > 15)
 		ft_putadd(n / 16, count);
 	ft_putchar(base[n % 16], count);
 }
 
-void	ft_flags(va_list args, char c, int *count)
+void	ft_flags(va_list current_arg, char c, int *count)
 {
+	unsigned long int	stock;
+
 	if (c == 'c')
-		ft_putchar(va_arg(args, int), count);
+		ft_putchar(va_arg(current_arg, int), count);
 	else if (c == 's')
-		ft_putstr(va_arg(args, char *), count);
+		ft_putstr(va_arg(current_arg, char *), count);
 	else if (c == 'd' || c == 'i')
-		ft_putnbr(va_arg(args, int), count);
+		ft_putnbr(va_arg(current_arg, int), count);
 	else if (c == 'x' || c == 'X')
-		ft_puthexa(va_arg(args, unsigned int), count, c);
+		ft_puthexa(va_arg(current_arg, unsigned int), count, c);
 	else if (c == '%')
 		ft_putchar('%', count);
 	else if (c == 'u')
-		ft_putuns(va_arg(args, unsigned int), count);
+		ft_putuns(va_arg(current_arg, unsigned int), count);
 	else if (c == 'p')
 	{
+		stock = va_arg(current_arg, unsigned long int);
+		if (!stock)
+		{
+			ft_putstr("(nil)", count);
+			return ;
+		}
 		ft_putstr("0x", count);
-		ft_putadd(va_arg(args, unsigned long int), count);
+		ft_putadd(stock, count);
 	}
 }
 
 int	ft_printf(const char *str, ...)
 {
-	va_list	args;
+	va_list	current_arg;
 	int		i;
 	int		count;
 
-	va_start(args, str);
+	va_start(current_arg, str);
 	count = 0;
 	i = 0;
 	while (str[i])
@@ -74,7 +80,7 @@ int	ft_printf(const char *str, ...)
 		if (str[i] == '%' && str[i + 1] != '\0')
 		{
 			i++;
-			ft_flags(args, str[i], &count);
+			ft_flags(current_arg, str[i], &count);
 		}
 		else if (str[i] != '%')
 		{
@@ -82,6 +88,6 @@ int	ft_printf(const char *str, ...)
 		}
 		i++;
 	}
-	va_end(args);
+	va_end(current_arg);
 	return (count);
 }
